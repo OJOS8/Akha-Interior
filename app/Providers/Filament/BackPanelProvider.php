@@ -30,6 +30,7 @@ class BackPanelProvider extends PanelProvider
             ->id('back')
             ->path('back')
             ->login()
+            ->darkMode()
             ->colors([
                 'primary' => Color::Amber,
             ])
