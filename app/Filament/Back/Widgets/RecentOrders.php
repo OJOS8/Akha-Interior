@@ -11,6 +11,8 @@ class RecentOrders extends BaseWidget
 {
     protected static ?string $heading = 'Pesanan Terbaru';
 
+    protected static ?int $sort = 4;
+
     protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
@@ -19,6 +21,8 @@ class RecentOrders extends BaseWidget
             ->query(
                 Order::query()->with('user')->latest()
             )
+            ->emptyStateHeading('Belum ada pesanan')
+            ->emptyStateDescription('Pesanan akan muncul di sini saat customer melakukan checkout.')
             ->columns([
                 Tables\Columns\TextColumn::make('order_code')
                     ->label('Kode Order')

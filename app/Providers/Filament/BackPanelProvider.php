@@ -4,7 +4,10 @@ namespace App\Providers\Filament;
 
 use App\Filament\Back\Widgets\AdminSalesOverview;
 use App\Filament\Back\Widgets\AdminStatsOverview;
+use App\Filament\Back\Widgets\LowStockProducts;
+use App\Filament\Back\Widgets\RecentInquiries;
 use App\Filament\Back\Widgets\RecentOrders;
+use App\Filament\Back\Widgets\SalesChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -47,7 +50,10 @@ class BackPanelProvider extends PanelProvider
             ->widgets([
                 AdminStatsOverview::class,
                 AdminSalesOverview::class,
+                SalesChart::class,
                 RecentOrders::class,
+                RecentInquiries::class,
+                LowStockProducts::class,
             ])
             ->middleware([
                 EncryptCookies::class,

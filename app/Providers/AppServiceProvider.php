@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\View\Composers\FrontComposer;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer([
+            'front.layouts.app',
+            'front.partials.navbar',
+            'front.partials.footer',
+        ], FrontComposer::class);
     }
 }
