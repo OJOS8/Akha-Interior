@@ -5,7 +5,6 @@ namespace App\Filament\Back\Widgets;
 use App\Models\Order;
 use Carbon\CarbonImmutable;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
 
 class SalesChart extends ChartWidget
 {
@@ -22,26 +21,15 @@ class SalesChart extends ChartWidget
         $end = CarbonImmutable::now()->endOfMonth();
         $start = $end->subMonths(5)->startOfMonth();
 
-        $rows = Order::query()
+        $buckets = Order::query()
             ->where('payment_status', 'paid')
             ->whereBetween('ordered_at', [$start, $end])
-            ->select(
-                DB::raw("strftime('%Y-%m', ordered_at) as bucket"),
-                DB::raw('COUNT(*) as orders_count'),
-                DB::raw('COALESCE(SUM(grand_total), 0) as revenue'),
-            )
-            ->groupBy('bucket')
-            ->pluck('revenue', 'bucket');
-
-        $counts = Order::query()
-            ->where('payment_status', 'paid')
-            ->whereBetween('ordered_at', [$start, $end])
-            ->select(
-                DB::raw("strftime('%Y-%m', ordered_at) as bucket"),
-                DB::raw('COUNT(*) as orders_count'),
-            )
-            ->groupBy('bucket')
-            ->pluck('orders_count', 'bucket');
+            ->get(['ordered_at', 'grand_total'])
+            ->groupBy(fn (Order $order) => CarbonImmutable::parse($order->ordered_at)->format('Y-m'))
+            ->map(fn ($group) => [
+                'orders' => $group->count(),
+                'revenue' => (int) $group->sum('grand_total'),
+            ]);
 
         $labels = [];
         $revenue = [];
@@ -51,8 +39,8 @@ class SalesChart extends ChartWidget
             $month = $start->addMonths($i);
             $key = $month->format('Y-m');
             $labels[] = $month->translatedFormat('M Y');
-            $revenue[] = (int) ($rows[$key] ?? 0);
-            $orders[] = (int) ($counts[$key] ?? 0);
+            $revenue[] = (int) ($buckets[$key]['revenue'] ?? 0);
+            $orders[] = (int) ($buckets[$key]['orders'] ?? 0);
         }
 
         return [
