@@ -11,6 +11,10 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AdminSalesOverview extends BaseWidget
 {
+    protected static ?int $sort = 2;
+
+    protected int|string|array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         $revenue = (int) Order::query()
