@@ -3,36 +3,49 @@
 @section('title', 'Kontak — Akha Interior')
 
 @section('content')
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12">
+<div style="max-width:1100px; margin:0 auto; padding:64px 32px 80px;">
+
+    <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:64px; align-items:start;">
+
+        {{-- Info kiri --}}
         <div>
-            <p class="uppercase tracking-[0.3em] text-xs text-akha-600 mb-2">Hubungi Akha</p>
-            <h1 class="font-serif-display text-3xl sm:text-4xl text-akha-900 mb-4">
-                Kami senang mendengar tentang ruang Anda.
+            <div style="font-size:11px; letter-spacing:0.10em; text-transform:uppercase; font-weight:600; color:var(--fg-muted); margin-bottom:12px;">Hubungi Akha</div>
+            <h1 style="font-family:var(--font-display); font-size:clamp(32px,4.5vw,56px); line-height:1.05; letter-spacing:-0.02em; font-weight:400; color:var(--fg); margin:0 0 20px;">
+                Kami senang mendengar tentang<br>
+                <em style="font-style:italic; color:var(--accent);">ruang Anda.</em>
             </h1>
-            <p class="text-akha-700 leading-relaxed mb-8">
-                Mau bertanya tentang produk, ukuran khusus, atau jadwal pengiriman? Tinggalkan pesan di bawah dan tim Akha akan menghubungi Anda kembali — biasanya dalam 1×24 jam pada hari kerja.
+            <p style="font-size:15px; line-height:1.65; color:var(--fg-muted); margin:0 0 36px; max-width:400px;">
+                Mau bertanya tentang produk, ukuran khusus, atau jadwal pengiriman? Tinggalkan pesan dan tim Akha akan menghubungi Anda kembali dalam 1×24 jam kerja.
             </p>
 
-            <dl class="space-y-4 text-sm">
+            <dl style="display:flex; flex-direction:column; gap:20px;">
                 <div>
-                    <dt class="text-xs uppercase tracking-widest text-akha-600">Email</dt>
-                    <dd class="text-akha-900 mt-1">halo@akhainterior.id</dd>
+                    <dt style="font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:4px;">Email</dt>
+                    <dd style="font-size:15px; color:var(--fg); font-weight:500; margin:0;">halo@akhainterior.id</dd>
                 </div>
                 <div>
-                    <dt class="text-xs uppercase tracking-widest text-akha-600">WhatsApp</dt>
-                    <dd class="text-akha-900 mt-1">+62 812-0000-0000</dd>
+                    <dt style="font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:4px;">WhatsApp</dt>
+                    <dd style="font-size:15px; color:var(--fg); font-weight:500; margin:0;">+62 812-0000-0000</dd>
                 </div>
                 <div>
-                    <dt class="text-xs uppercase tracking-widest text-akha-600">Showroom</dt>
-                    <dd class="text-akha-900 mt-1">Senin – Sabtu, 10.00 – 18.00 WIB</dd>
+                    <dt style="font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:4px;">Showroom</dt>
+                    <dd style="font-size:15px; color:var(--fg); font-weight:500; margin:0 0 2px;">Jakarta Selatan</dd>
+                    <dd style="font-size:13px; color:var(--fg-muted); margin:0;">Senin – Sabtu, 10.00 – 18.00 WIB</dd>
                 </div>
             </dl>
+
+            {{-- Quote --}}
+            <blockquote style="font-family:var(--font-display); font-size:20px; line-height:1.3; letter-spacing:-0.01em; font-style:italic; color:var(--fg); border-left:3px solid var(--accent); padding-left:16px; margin:40px 0 0;">
+                "Setiap furniture Akha lahir dari diskusi panjang tentang kebutuhan rumah Anda."
+            </blockquote>
         </div>
 
-        <div class="rounded-2xl bg-white ring-1 ring-akha-200 p-8">
+        {{-- Form kanan --}}
+        <div style="background:var(--bg-elev); border:1px solid var(--border); border-radius:18px; padding:36px;">
+
             @if ($errors->any())
-                <div class="rounded-lg bg-akha-100 ring-1 ring-akha-300 px-4 py-3 mb-4 text-sm text-akha-900">
-                    <ul class="list-disc pl-4">
+                <div style="background:#FFF4EC; border:1px solid #FFE3CC; border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:#8A350B;">
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px;">
                         @foreach ($errors->all() as $err)
                             <li>{{ $err }}</li>
                         @endforeach
@@ -40,39 +53,56 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('front.contact.store') }}" class="space-y-4">
+            @if (session('success'))
+                <div style="background:#DDEAD8; border:1px solid #3F7A4E; border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:#2D6248;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('front.contact.store') }}" style="display:flex; flex-direction:column; gap:18px;">
                 @csrf
+
                 <div>
-                    <label for="name" class="block text-xs uppercase tracking-widest text-akha-600 mb-1">Nama</label>
+                    <label for="name" style="display:block; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:6px;">Nama *</label>
                     <input id="name" name="name" type="text" value="{{ old('name') }}" required
-                           class="w-full rounded-lg border-akha-200 bg-akha-50/40 focus:border-akha-600 focus:ring-akha-600">
+                           style="width:100%; border:1px solid var(--border); border-radius:8px; background:var(--bg); padding:10px 14px; font-size:14px; color:var(--fg); font-family:var(--font-sans); outline:none; box-sizing:border-box; transition:border-color .15s;"
+                           onfocus="this.style.borderColor='var(--fg)'" onblur="this.style.borderColor='var(--border)'">
                 </div>
-                <div class="grid sm:grid-cols-2 gap-4">
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
                     <div>
-                        <label for="email" class="block text-xs uppercase tracking-widest text-akha-600 mb-1">Email</label>
+                        <label for="email" style="display:block; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:6px;">Email</label>
                         <input id="email" name="email" type="email" value="{{ old('email') }}"
-                               class="w-full rounded-lg border-akha-200 bg-akha-50/40 focus:border-akha-600 focus:ring-akha-600">
+                               style="width:100%; border:1px solid var(--border); border-radius:8px; background:var(--bg); padding:10px 14px; font-size:14px; color:var(--fg); font-family:var(--font-sans); outline:none; box-sizing:border-box;"
+                               onfocus="this.style.borderColor='var(--fg)'" onblur="this.style.borderColor='var(--border)'">
                     </div>
                     <div>
-                        <label for="phone" class="block text-xs uppercase tracking-widest text-akha-600 mb-1">No. Telepon</label>
+                        <label for="phone" style="display:block; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:6px;">No. Telepon</label>
                         <input id="phone" name="phone" type="text" value="{{ old('phone') }}"
-                               class="w-full rounded-lg border-akha-200 bg-akha-50/40 focus:border-akha-600 focus:ring-akha-600">
+                               style="width:100%; border:1px solid var(--border); border-radius:8px; background:var(--bg); padding:10px 14px; font-size:14px; color:var(--fg); font-family:var(--font-sans); outline:none; box-sizing:border-box;"
+                               onfocus="this.style.borderColor='var(--fg)'" onblur="this.style.borderColor='var(--border)'">
                     </div>
                 </div>
+
                 <div>
-                    <label for="subject" class="block text-xs uppercase tracking-widest text-akha-600 mb-1">Subjek</label>
+                    <label for="subject" style="display:block; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:6px;">Subjek</label>
                     <input id="subject" name="subject" type="text" value="{{ old('subject', request('subject')) }}"
-                           class="w-full rounded-lg border-akha-200 bg-akha-50/40 focus:border-akha-600 focus:ring-akha-600">
+                           style="width:100%; border:1px solid var(--border); border-radius:8px; background:var(--bg); padding:10px 14px; font-size:14px; color:var(--fg); font-family:var(--font-sans); outline:none; box-sizing:border-box;"
+                           onfocus="this.style.borderColor='var(--fg)'" onblur="this.style.borderColor='var(--border)'">
                 </div>
+
                 <div>
-                    <label for="message" class="block text-xs uppercase tracking-widest text-akha-600 mb-1">Pesan</label>
+                    <label for="message" style="display:block; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:6px;">Pesan *</label>
                     <textarea id="message" name="message" rows="5" required
-                              class="w-full rounded-lg border-akha-200 bg-akha-50/40 focus:border-akha-600 focus:ring-akha-600">{{ old('message') }}</textarea>
+                              style="width:100%; border:1px solid var(--border); border-radius:8px; background:var(--bg); padding:10px 14px; font-size:14px; color:var(--fg); font-family:var(--font-sans); outline:none; box-sizing:border-box; resize:vertical; transition:border-color .15s;"
+                              onfocus="this.style.borderColor='var(--fg)'" onblur="this.style.borderColor='var(--border)'">{{ old('message') }}</textarea>
                 </div>
-                <button type="submit" class="inline-flex items-center px-6 py-3 rounded-full bg-akha-900 text-akha-50 font-medium hover:bg-akha-700 transition">
-                    Kirim Pesan
+
+                <button type="submit" class="btn-primary" style="align-self:flex-start; padding:12px 32px;">
+                    Kirim Pesan →
                 </button>
             </form>
         </div>
-    </section>
+    </div>
+</div>
 @endsection

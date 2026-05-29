@@ -3,84 +3,106 @@
 @section('title', 'Katalog Produk — Akha Interior')
 
 @section('content')
-    <section class="bg-akha-100/60 border-b border-akha-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-            <p class="uppercase tracking-[0.3em] text-xs text-akha-600 mb-2">Katalog</p>
-            <h1 class="font-serif-display text-3xl sm:text-4xl text-akha-900">Semua furniture Akha</h1>
-            <p class="mt-3 text-akha-700 max-w-xl">Dirakit dengan kayu solid pilihan, dirancang untuk menua bersama rumah Anda.</p>
-        </div>
-    </section>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid lg:grid-cols-[260px_1fr] gap-10">
-        <aside class="space-y-8">
-            <form method="GET" action="{{ route('front.shop.index') }}" class="space-y-3">
-                <label class="block text-xs uppercase tracking-widest text-akha-600">Cari</label>
-                <div class="relative">
+{{-- Hero --}}
+<section style="border-bottom:1px solid var(--border); background:var(--bg-elev);">
+    <div style="max-width:1320px; margin:0 auto; padding:56px 32px 48px;">
+        <div style="font-size:11px; letter-spacing:0.10em; text-transform:uppercase; font-weight:600; color:var(--fg-muted); margin-bottom:8px;">Katalog</div>
+        <h1 style="font-family:var(--font-display); font-size:clamp(32px,5vw,56px); line-height:1.0; letter-spacing:-0.02em; font-weight:400; color:var(--fg); margin:0;">
+            Semua furniture Akha.
+        </h1>
+        <p style="margin-top:14px; font-size:16px; color:var(--fg-muted); max-width:500px; line-height:1.55;">
+            Dirakit dengan kayu solid pilihan, dirancang untuk menua bersama rumah Anda.
+        </p>
+    </div>
+</section>
+
+<div style="max-width:1320px; margin:0 auto; padding:48px 32px;">
+    <div style="display:grid; grid-template-columns:220px 1fr; gap:40px; align-items:start;" class="md:grid-cols-[220px_1fr] grid-cols-1">
+
+        {{-- ── Sidebar filter ── --}}
+        <aside>
+
+            {{-- Search --}}
+            <form method="GET" action="{{ route('front.shop.index') }}" style="margin-bottom:28px;">
+                <label style="font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); display:block; margin-bottom:8px;">Cari</label>
+                <div style="position:relative;">
                     <input type="search" name="search" value="{{ request('search') }}" placeholder="Cari produk..."
-                           class="w-full rounded-full border-akha-200 bg-white text-sm focus:border-akha-600 focus:ring-akha-600 pr-10">
-                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-akha-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                           style="width:100%; border:1px solid var(--border); border-radius:999px; background:var(--bg-elev); padding:9px 40px 9px 16px; font-size:13px; color:var(--fg); font-family:var(--font-sans); outline:none; box-sizing:border-box;"
+                           onfocus="this.style.borderColor='var(--fg)'" onblur="this.style.borderColor='var(--border)'">
+                    <button type="submit" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--fg-muted); display:flex; align-items:center;">
+                        <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
                     </button>
                 </div>
             </form>
 
-            <div>
-                <p class="text-xs uppercase tracking-widest text-akha-600 mb-3">Kategori</p>
-                <ul class="space-y-1.5">
+            {{-- Kategori --}}
+            <div style="margin-bottom:28px;">
+                <div style="font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:12px;">Kategori</div>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px;">
                     <li>
                         <a href="{{ route('front.shop.index', request()->except('category', 'page')) }}"
-                           class="text-sm {{ request('category') ? 'text-akha-700 hover:text-akha-900' : 'text-akha-900 font-medium' }}">
+                           style="display:block; padding:6px 10px; border-radius:8px; font-size:13px; text-decoration:none; font-weight:{{ !request('category') ? '600' : '400' }}; color:{{ !request('category') ? 'var(--fg)' : 'var(--fg-muted)' }}; background:{{ !request('category') ? 'var(--bg-sunken)' : 'transparent' }};">
                             Semua produk
                         </a>
                     </li>
                     @foreach ($categories as $cat)
                         <li>
                             <a href="{{ route('front.shop.index', array_merge(request()->except('page'), ['category' => $cat->slug])) }}"
-                               class="text-sm {{ request('category') === $cat->slug ? 'text-akha-900 font-medium' : 'text-akha-700 hover:text-akha-900' }}">
+                               style="display:block; padding:6px 10px; border-radius:8px; font-size:13px; text-decoration:none; font-weight:{{ request('category') === $cat->slug ? '600' : '400' }}; color:{{ request('category') === $cat->slug ? 'var(--fg)' : 'var(--fg-muted)' }}; background:{{ request('category') === $cat->slug ? 'var(--bg-sunken)' : 'transparent' }};">
                                 {{ $cat->name }}
                             </a>
                         </li>
                     @endforeach
                 </ul>
             </div>
-        </aside>
 
-        <div>
-            <div class="flex items-center justify-between mb-6 gap-4 flex-wrap">
-                <p class="text-sm text-akha-700">
-                    Menampilkan <span class="font-medium text-akha-900">{{ $products->total() }}</span> produk
-                </p>
-                <form method="GET" action="{{ route('front.shop.index') }}" class="flex items-center gap-2">
+            {{-- Urutkan --}}
+            <div>
+                <div style="font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--fg-muted); margin-bottom:12px;">Urutkan</div>
+                <form method="GET" action="{{ route('front.shop.index') }}">
                     @foreach (request()->except(['sort', 'page']) as $key => $value)
                         <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                     @endforeach
-                    <label for="sort" class="text-sm text-akha-700">Urutkan</label>
-                    <select id="sort" name="sort" onchange="this.form.submit()"
-                            class="rounded-full border-akha-200 bg-white text-sm focus:border-akha-600 focus:ring-akha-600">
-                        <option value="latest" @selected(request('sort') === 'latest' || ! request('sort'))>Terbaru</option>
+                    <select name="sort" onchange="this.form.submit()"
+                            style="width:100%; border:1px solid var(--border); border-radius:8px; background:var(--bg-elev); padding:9px 12px; font-size:13px; color:var(--fg); font-family:var(--font-sans); outline:none; cursor:pointer;">
+                        <option value="latest" @selected(!request('sort') || request('sort') === 'latest')>Terbaru</option>
                         <option value="price_asc" @selected(request('sort') === 'price_asc')>Harga termurah</option>
                         <option value="price_desc" @selected(request('sort') === 'price_desc')>Harga tertinggi</option>
                         <option value="name" @selected(request('sort') === 'name')>Nama A–Z</option>
                     </select>
                 </form>
             </div>
+        </aside>
+
+        {{-- ── Produk grid ── --}}
+        <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+                <p style="font-size:13px; color:var(--fg-muted);">
+                    Menampilkan <span style="font-weight:600; color:var(--fg);">{{ $products->total() }}</span> produk
+                </p>
+            </div>
 
             @if ($products->isEmpty())
-                <div class="rounded-2xl bg-white ring-1 ring-akha-200 p-12 text-center">
-                    <p class="font-serif-display text-2xl text-akha-900 mb-2">Belum ada produk yang cocok</p>
-                    <p class="text-sm text-akha-700">Coba ubah pencarian atau filter kategori.</p>
+                <div style="background:var(--bg-elev); border:1px solid var(--border); border-radius:16px; padding:64px 32px; text-align:center;">
+                    <div style="font-family:var(--font-display); font-size:28px; letter-spacing:-0.01em; color:var(--fg); margin-bottom:8px;">Belum ada produk yang cocok</div>
+                    <p style="font-size:14px; color:var(--fg-muted);">Coba ubah pencarian atau pilih kategori lain.</p>
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:28px 22px;">
                     @foreach ($products as $product)
                         @include('front.partials.product-card', ['product' => $product])
                     @endforeach
                 </div>
 
-                <div class="mt-10">
+                <div style="margin-top:40px;">
                     {{ $products->links() }}
                 </div>
             @endif
         </div>
-    </section>
+    </div>
+</div>
+
 @endsection

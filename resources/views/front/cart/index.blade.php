@@ -3,90 +3,153 @@
 @section('title', 'Keranjang Belanja — Akha Interior')
 
 @section('content')
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="font-serif-display text-3xl sm:text-4xl text-akha-900 mb-8">Keranjang Belanja</h1>
+<div style="max-width:1100px; margin:0 auto; padding:48px 32px 80px;">
 
-        @if (empty($items))
-            <div class="rounded-2xl bg-white ring-1 ring-akha-200 p-12 text-center">
-                <p class="font-serif-display text-2xl text-akha-900 mb-2">Keranjang masih kosong</p>
-                <p class="text-akha-700 mb-6">Mulai jelajahi koleksi furniture Akha untuk ruang Anda.</p>
-                <a href="{{ route('front.shop.index') }}" class="inline-flex items-center px-6 py-3 rounded-full bg-akha-900 text-akha-50 font-medium hover:bg-akha-700 transition">
-                    Lihat Katalog
-                </a>
+    <div style="margin-bottom:32px;">
+        <div style="font-size:11px; letter-spacing:0.10em; text-transform:uppercase; font-weight:600; color:var(--fg-muted); margin-bottom:8px;">Keranjang Anda</div>
+        <h1 style="font-family:var(--font-display); font-size:clamp(28px,4vw,48px); line-height:1.0; letter-spacing:-0.02em; font-weight:400; color:var(--fg); margin:0;">
+            @if (!empty($items))
+                {{ array_sum(array_column($items, 'qty')) }} {{ array_sum(array_column($items, 'qty')) === 1 ? 'barang' : 'barang' }} di keranjang.
+            @else
+                Keranjang masih kosong.
+            @endif
+        </h1>
+    </div>
+
+    @if (empty($items))
+        {{-- Empty state --}}
+        <div style="background:var(--bg-elev); border:1px solid var(--border); border-radius:18px; padding:72px 32px; text-align:center; max-width:480px; margin:0 auto;">
+            <div style="width:56px; height:56px; border-radius:999px; background:var(--bg-sunken); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                <svg style="width:24px;height:24px; color:var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+                </svg>
             </div>
-        @else
-            <div class="grid lg:grid-cols-[1fr_360px] gap-10">
-                <div class="rounded-2xl bg-white ring-1 ring-akha-200 divide-y divide-akha-200">
-                    @foreach ($items as $row)
-                        @php
-                            /** @var \App\Models\Product $p */
-                            $p = $row['product'];
-                            $img = $p->thumbnail
-                                ? (str_starts_with($p->thumbnail, 'http') ? $p->thumbnail : asset('storage/' . $p->thumbnail))
-                                : null;
-                        @endphp
-                        <div class="p-5 flex gap-5 items-center">
-                            <a href="{{ route('front.shop.show', $p->slug) }}" class="w-24 h-24 rounded-xl overflow-hidden product-img-fallback shrink-0">
-                                @if ($img)
-                                    <img src="{{ $img }}" alt="{{ $p->name }}" class="w-full h-full object-cover">
-                                @endif
-                            </a>
-                            <div class="flex-1 min-w-0">
-                                <a href="{{ route('front.shop.show', $p->slug) }}" class="font-serif-display text-lg text-akha-900 hover:text-akha-600">{{ $p->name }}</a>
-                                @if ($p->category)
-                                    <p class="text-xs uppercase tracking-widest text-akha-600 mt-1">{{ $p->category->name }}</p>
-                                @endif
-                                <p class="text-sm text-akha-700 mt-1">{{ \App\Support\Money::idr($row['price']) }} / unit</p>
-                            </div>
-                            <form method="POST" action="{{ route('front.cart.update', $p) }}" class="flex items-center gap-2">
-                                @csrf
-                                @method('PATCH')
-                                <input type="number" name="qty" min="0" value="{{ $row['qty'] }}"
-                                       class="w-16 rounded-full border-akha-200 bg-white text-sm text-center focus:border-akha-600 focus:ring-akha-600">
-                                <button type="submit" class="text-xs text-akha-700 hover:text-akha-900 underline underline-offset-4">Update</button>
-                            </form>
-                            <p class="w-28 text-right font-medium text-akha-900">{{ \App\Support\Money::idr($row['subtotal']) }}</p>
-                            <form method="POST" action="{{ route('front.cart.remove', $p) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-akha-500 hover:text-akha-900" aria-label="Hapus">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </form>
-                        </div>
-                    @endforeach
-                </div>
+            <p style="font-size:14px; color:var(--fg-muted); line-height:1.6; margin:0 0 24px;">
+                Mulai jelajahi koleksi furniture Akha dan temukan yang cocok untuk ruang Anda.
+            </p>
+            <a href="{{ route('front.shop.index') }}" class="btn-primary">
+                Lihat Katalog →
+            </a>
+        </div>
 
-                <aside class="rounded-2xl bg-akha-900 text-akha-100 p-6 h-fit">
-                    <h2 class="font-serif-display text-xl text-akha-50 mb-4">Ringkasan</h2>
-                    <dl class="space-y-3 text-sm">
-                        <div class="flex justify-between">
-                            <dt class="text-akha-200">Subtotal</dt>
-                            <dd class="text-akha-50 font-medium">{{ \App\Support\Money::idr($subtotal) }}</dd>
+    @else
+        <div style="display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start;">
+
+            {{-- Items --}}
+            <div style="background:var(--bg-elev); border:1px solid var(--border); border-radius:16px; overflow:hidden;">
+                @foreach ($items as $row)
+                    @php
+                        /** @var \App\Models\Product $p */
+                        $p   = $row['product'];
+                        $img = $p->thumbnail
+                            ? (str_starts_with($p->thumbnail, 'http') ? $p->thumbnail : asset('storage/' . $p->thumbnail))
+                            : null;
+                    @endphp
+                    <div style="display:grid; grid-template-columns:88px 1fr auto auto auto; gap:16px; align-items:center; padding:20px 24px; border-bottom:1px solid var(--border);">
+                        {{-- Thumbnail --}}
+                        <a href="{{ route('front.shop.show', $p->slug) }}"
+                           style="display:block; border-radius:10px; overflow:hidden; background:#E6E6EA; aspect-ratio:1/1;">
+                            @if ($img)
+                                <img src="{{ $img }}" alt="{{ $p->name }}" style="width:100%; height:100%; object-fit:cover;">
+                            @endif
+                        </a>
+
+                        {{-- Info --}}
+                        <div style="min-width:0;">
+                            @if ($p->category)
+                                <div style="font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--fg-muted);">{{ $p->category->name }}</div>
+                            @endif
+                            <a href="{{ route('front.shop.show', $p->slug) }}"
+                               style="display:block; font-family:var(--font-display); font-size:17px; color:var(--fg); text-decoration:none; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                               onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--fg)'">
+                                {{ $p->name }}
+                            </a>
+                            <div style="font-size:13px; color:var(--fg-muted); margin-top:2px;">{{ \App\Support\Money::idr($row['price']) }} / unit</div>
                         </div>
-                        <div class="flex justify-between">
-                            <dt class="text-akha-200">Ongkir</dt>
-                            <dd class="text-akha-300">Dihitung saat checkout</dd>
-                        </div>
-                    </dl>
-                    <div class="border-t border-akha-700 mt-4 pt-4 flex justify-between text-base">
-                        <span class="text-akha-100">Total</span>
-                        <span class="text-akha-50 font-semibold">{{ \App\Support\Money::idr($subtotal) }}</span>
+
+                        {{-- Qty update --}}
+                        <form method="POST" action="{{ route('front.cart.update', $p) }}" style="display:flex; align-items:center; gap:6px;">
+                            @csrf
+                            @method('PATCH')
+                            <div style="display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:999px; background:var(--bg);">
+                                <button type="button" onclick="let i=this.parentElement.querySelector('input'); i.value=Math.max(0,parseInt(i.value)-1)"
+                                        style="width:30px; height:30px; border:none; background:none; cursor:pointer; font-size:16px; color:var(--fg); display:flex; align-items:center; justify-content:center;">−</button>
+                                <input type="number" name="qty" min="0" value="{{ $row['qty'] }}"
+                                       style="width:36px; text-align:center; border:none; background:transparent; font-size:13px; font-weight:600; color:var(--fg); font-family:var(--font-sans); outline:none; padding:0;">
+                                <button type="button" onclick="let i=this.parentElement.querySelector('input'); i.value=parseInt(i.value)+1"
+                                        style="width:30px; height:30px; border:none; background:none; cursor:pointer; font-size:16px; color:var(--fg); display:flex; align-items:center; justify-content:center;">+</button>
+                            </div>
+                            <button type="submit"
+                                    style="font-size:12px; font-weight:600; color:var(--fg-muted); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; font-family:var(--font-sans);">
+                                Update
+                            </button>
+                        </form>
+
+                        {{-- Subtotal --}}
+                        <span style="font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--fg); white-space:nowrap;">
+                            {{ \App\Support\Money::idr($row['subtotal']) }}
+                        </span>
+
+                        {{-- Hapus --}}
+                        <form method="POST" action="{{ route('front.cart.remove', $p) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    style="width:30px; height:30px; border:none; background:none; cursor:pointer; color:var(--fg-muted); display:flex; align-items:center; justify-content:center; border-radius:999px; transition:color .15s; transition:background .15s;"
+                                    onmouseover="this.style.color='var(--fg)'; this.style.background='var(--bg-sunken)'" onmouseout="this.style.color='var(--fg-muted)'; this.style.background='none'"
+                                    aria-label="Hapus">
+                                <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
-                    <a href="{{ route('front.contact') }}?subject={{ urlencode('Checkout pesanan saya') }}"
-                       class="mt-6 inline-flex w-full items-center justify-center px-5 py-3 rounded-full bg-akha-50 text-akha-900 font-medium hover:bg-akha-100 transition">
-                        Lanjut ke Checkout
-                    </a>
-                    <a href="{{ route('front.shop.index') }}" class="mt-3 inline-flex w-full items-center justify-center text-sm text-akha-200 hover:text-akha-50">
-                        Lanjut belanja
-                    </a>
-                    <form method="POST" action="{{ route('front.cart.clear') }}" class="mt-3 text-center">
+                @endforeach
+
+                {{-- Kosongkan keranjang --}}
+                <div style="padding:14px 24px; display:flex; justify-content:flex-end;">
+                    <form method="POST" action="{{ route('front.cart.clear') }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-xs text-akha-300 hover:text-akha-100 underline underline-offset-4">Kosongkan keranjang</button>
+                        <button type="submit"
+                                style="font-size:12px; color:var(--fg-muted); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; font-family:var(--font-sans);">
+                            Kosongkan keranjang
+                        </button>
                     </form>
-                </aside>
+                </div>
             </div>
-        @endif
-    </section>
+
+            {{-- Ringkasan --}}
+            <aside style="background:var(--fg); border-radius:16px; padding:28px; position:sticky; top:100px;">
+                <h2 style="font-family:var(--font-display); font-size:20px; font-weight:400; color:#FAF9F6; margin:0 0 20px;">Ringkasan Pesanan</h2>
+
+                <dl style="display:flex; flex-direction:column; gap:10px; font-size:14px;">
+                    <div style="display:flex; justify-content:space-between; color:#C8C8D0;">
+                        <dt>Subtotal</dt>
+                        <dd style="font-variant-numeric:tabular-nums; color:#F4F3F0; font-weight:600;">{{ \App\Support\Money::idr($subtotal) }}</dd>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; color:#C8C8D0;">
+                        <dt>Ongkir</dt>
+                        <dd style="color:#9A9AA6;">Dihitung saat checkout</dd>
+                    </div>
+                </dl>
+
+                <div style="border-top:1px solid #2A2A30; margin:16px 0; padding-top:16px; display:flex; justify-content:space-between; align-items:baseline;">
+                    <span style="font-size:14px; font-weight:600; color:#F4F3F0;">Total</span>
+                    <span style="font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; color:#FAF9F6;">{{ \App\Support\Money::idr($subtotal) }}</span>
+                </div>
+
+                <a href="{{ route('front.contact') }}?subject={{ urlencode('Checkout pesanan saya') }}"
+                   style="display:flex; align-items:center; justify-content:center; width:100%; padding:14px; border-radius:999px; background:#FAF9F6; color:#0B0B0C; font-size:14px; font-weight:600; text-decoration:none; margin-top:4px; box-sizing:border-box;">
+                    Lanjut ke Checkout →
+                </a>
+                <a href="{{ route('front.shop.index') }}"
+                   style="display:block; text-align:center; margin-top:10px; font-size:13px; color:#9A9AA6; text-decoration:none;"
+                   onmouseover="this.style.color='#F4F3F0'" onmouseout="this.style.color='#9A9AA6'">
+                    Lanjut belanja
+                </a>
+            </aside>
+        </div>
+    @endif
+</div>
 @endsection
